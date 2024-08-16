@@ -26,7 +26,9 @@ public class SpringJdbcAuthorDaoImpl implements AuthorDao {
 
 	@Override
 	public Author save(Author author) {
-		return null;
+		jdbcTemplate.update("INSERT INTO author (first_name, last_name) VALUES (?, ?)", author.getFirstName(), author.getLastName());
+		Long lastId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Long.class);
+		return getById(lastId);
 	}
 
 	@Override
