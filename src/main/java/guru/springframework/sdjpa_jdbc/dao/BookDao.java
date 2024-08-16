@@ -9,9 +9,9 @@ public interface BookDao {
 
 	Book findByTitle(String title);
 
-	Book save(Book author);
+	Book save(Book book);
 
-	Book update(Book author);
+	Book update(Book book);
 
-	void delete(Book author);
+	void deleteById(Long id);
 }

@@ -1,5 +1,6 @@
-package guru.springframework.sdjpa_jdbc.dao;
+package guru.springframework.sdjpa_jdbc.dao.template;
 
+import guru.springframework.sdjpa_jdbc.dao.AuthorDao;
 import guru.springframework.sdjpa_jdbc.dao.mapper.AuthorMapper;
 import guru.springframework.sdjpa_jdbc.domain.Author;
 import org.springframework.dao.EmptyResultDataAccessException;

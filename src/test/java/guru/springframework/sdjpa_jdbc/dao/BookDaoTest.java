@@ -1,6 +1,5 @@
 package guru.springframework.sdjpa_jdbc.dao;
 
-import guru.springframework.sdjpa_jdbc.domain.Author;
 import guru.springframework.sdjpa_jdbc.domain.Book;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +67,7 @@ public class BookDaoTest {
 		book.setAuthorId(1L);
 		var saved = bookDao.save(book);
 
-		bookDao.delete(saved);
+		bookDao.deleteById(saved.getId());
 
 		assertThat(bookDao.getById(saved.getId())).isNull();
 	}
