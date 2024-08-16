@@ -54,11 +54,9 @@ public class AuthorDaoTest {
 		Author saved = authorDao.save(author);
 
 		saved.setLastName("Oldboy");
-		authorDao.update(saved);
+		var updated = authorDao.update(saved);
 
-		Author read = authorDao.getById(saved.getId());
-
-		assertThat(read.getLastName()).isEqualTo(saved.getLastName());
+		assertThat(updated.getLastName()).isEqualTo(saved.getLastName());
 	}
 
 	@Test
