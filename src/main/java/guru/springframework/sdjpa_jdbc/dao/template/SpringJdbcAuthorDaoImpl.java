@@ -1,11 +1,9 @@
 package guru.springframework.sdjpa_jdbc.dao.template;
 
 import guru.springframework.sdjpa_jdbc.dao.AuthorDao;
-import guru.springframework.sdjpa_jdbc.dao.mapper.AuthorMapper;
 import guru.springframework.sdjpa_jdbc.domain.Author;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,7 +17,11 @@ public class SpringJdbcAuthorDaoImpl implements AuthorDao {
 	@Override
 	public Author getById(Long id) {
 		try {
-			return jdbcTemplate.queryForObject("SELECT * FROM author WHERE id = ?", getMapper(), id);
+			return jdbcTemplate.query(
+					"SELECT a.*, b.id as book_id, title, isbn, publisher FROM author a LEFT JOIN book b ON b.author_id = a.id WHERE a.id = ?",
+					new AuthorExtractor(),
+					id
+			);
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
@@ -27,7 +29,12 @@ public class SpringJdbcAuthorDaoImpl implements AuthorDao {
 
 	@Override
 	public Author findByName(String firstName, String lastName) {
-		return jdbcTemplate.queryForObject("SELECT * FROM author WHERE first_name = ? AND last_name = ?", getMapper(), firstName, lastName);
+		return jdbcTemplate.query(
+				"SELECT a.*, b.id as book_id, title, isbn, publisher FROM author a LEFT JOIN book b ON b.author_id = a.id WHERE first_name = ? AND last_name = ?",
+				new AuthorExtractor(),
+				firstName,
+				lastName
+		);
 	}
 
 	@Override
@@ -48,7 +55,4 @@ public class SpringJdbcAuthorDaoImpl implements AuthorDao {
 		jdbcTemplate.update("DELETE FROM author WHERE id = ?", id);
 	}
 
-	private RowMapper<Author> getMapper() {
-		return new AuthorMapper();
-	}
 }

@@ -1,7 +1,7 @@
 package guru.springframework.sdjpa_jdbc.dao.template;
 
 import guru.springframework.sdjpa_jdbc.dao.BookDao;
-import guru.springframework.sdjpa_jdbc.dao.mapper.BookMapper;
+import guru.springframework.sdjpa_jdbc.dao.template.mapper.BookMapper;
 import guru.springframework.sdjpa_jdbc.domain.Book;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
