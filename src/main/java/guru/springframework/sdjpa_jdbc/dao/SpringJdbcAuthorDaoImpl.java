@@ -2,6 +2,7 @@ package guru.springframework.sdjpa_jdbc.dao;
 
 import guru.springframework.sdjpa_jdbc.dao.mapper.AuthorMapper;
 import guru.springframework.sdjpa_jdbc.domain.Author;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -16,7 +17,11 @@ public class SpringJdbcAuthorDaoImpl implements AuthorDao {
 
 	@Override
 	public Author getById(Long id) {
-		return jdbcTemplate.queryForObject("SELECT * FROM author WHERE id = ?", getMapper(), id);
+		try {
+			return jdbcTemplate.queryForObject("SELECT * FROM author WHERE id = ?", getMapper(), id);
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
 	}
 
 	@Override
@@ -38,8 +43,8 @@ public class SpringJdbcAuthorDaoImpl implements AuthorDao {
 	}
 
 	@Override
-	public void delete(Author author) {
-
+	public void deleteById(Long id) {
+		jdbcTemplate.update("DELETE FROM author WHERE id = ?", id);
 	}
 
 	private RowMapper<Author> getMapper() {

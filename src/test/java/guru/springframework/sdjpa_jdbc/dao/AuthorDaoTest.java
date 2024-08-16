@@ -67,7 +67,7 @@ public class AuthorDaoTest {
 
 		Author saved = authorDao.save(author);
 
-		authorDao.delete(saved);
+		authorDao.deleteById(saved.getId());
 		assertThat(authorDao.getById(saved.getId())).isNull();
 	}
 }
