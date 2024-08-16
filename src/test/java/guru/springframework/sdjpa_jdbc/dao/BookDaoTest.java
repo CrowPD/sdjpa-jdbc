@@ -53,9 +53,9 @@ public class BookDaoTest {
 
 
 		saved.setPublisher("Faf Media");
-		bookDao.update(saved);
+		Book updated = bookDao.update(saved);
 
-		assertThat(bookDao.getById(saved.getId()).getPublisher()).isEqualTo(saved.getPublisher());
+		assertThat(updated.getPublisher()).isEqualTo(saved.getPublisher());
 	}
 
 	@Test
