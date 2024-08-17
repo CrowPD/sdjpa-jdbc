@@ -17,7 +17,10 @@ public class HiberAuthorDaoImpl implements AuthorDao {
 
 	@Override
 	public Author getById(Long id) {
-		return getEntityManager().find(Author.class, id);
+		EntityManager em = getEntityManager();
+		Author author = em.find(Author.class, id);
+		em.close();
+		return author;
 	}
 
 	@Override
@@ -39,8 +42,9 @@ public class HiberAuthorDaoImpl implements AuthorDao {
 		em.persist(author);
 		em.flush();
 		em.getTransaction().commit();
+		em.close();
 
-		return author;
+		return getById(author.getId());
 	}
 
 	@Override
@@ -51,8 +55,9 @@ public class HiberAuthorDaoImpl implements AuthorDao {
 		em.merge(author);
 		em.flush();
 		em.getTransaction().commit();
+		em.close();
 
-		return em.find(Author.class, author.getId());
+		return getById(author.getId());
 	}
 
 	@Override
@@ -62,6 +67,7 @@ public class HiberAuthorDaoImpl implements AuthorDao {
 		em.remove(em.find(Author.class, id));
 		em.flush();
 		em.getTransaction().commit();
+		em.close();
 	}
 
 	private EntityManager getEntityManager() {

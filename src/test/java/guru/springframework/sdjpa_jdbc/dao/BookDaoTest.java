@@ -40,6 +40,8 @@ public class BookDaoTest {
 		var saved = bookDao.save(book);
 
 		assertThat(saved.getId()).isGreaterThan(0);
+
+		bookDao.deleteById(saved.getId());
 	}
 
 	@Test
@@ -56,6 +58,8 @@ public class BookDaoTest {
 		Book updated = bookDao.update(saved);
 
 		assertThat(updated.getPublisher()).isEqualTo(saved.getPublisher());
+
+		bookDao.deleteById(saved.getId());
 	}
 
 	@Test

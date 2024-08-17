@@ -4,6 +4,7 @@ import guru.springframework.sdjpa_jdbc.dao.BookDao;
 import guru.springframework.sdjpa_jdbc.domain.Book;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +18,10 @@ public class HibernateBookDaoImpl implements BookDao {
 
 	@Override
 	public Book getById(Long id) {
-		return getEntityManager().find(Book.class, id);
+		EntityManager em = getEntityManager();
+		Book book = em.find(Book.class, id);
+		em.close();
+		return book;
 	}
 
 	@Override
@@ -32,17 +36,37 @@ public class HibernateBookDaoImpl implements BookDao {
 
 	@Override
 	public Book save(Book book) {
-		return null;
+		EntityManager em = getEntityManager();
+		EntityTransaction transaction = em.getTransaction();
+		transaction.begin();
+		em.persist(book);
+		em.flush();
+		transaction.commit();
+		em.close();
+		return getById(book.getId());
 	}
 
 	@Override
 	public Book update(Book book) {
-		return null;
+		EntityManager em = getEntityManager();
+		EntityTransaction transaction = em.getTransaction();
+		transaction.begin();
+		em.merge(book);
+		em.flush();
+		transaction.commit();
+		em.close();
+		return getById(book.getId());
 	}
 
 	@Override
 	public void deleteById(Long id) {
-
+		EntityManager em = getEntityManager();
+		EntityTransaction transaction = em.getTransaction();
+		transaction.begin();
+		em.remove(em.find(Book.class, id));
+		em.flush();
+		transaction.commit();
+		em.close();
 	}
 
 	private EntityManager getEntityManager() {
