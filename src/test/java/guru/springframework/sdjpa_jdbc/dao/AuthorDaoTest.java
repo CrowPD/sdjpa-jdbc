@@ -10,7 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@ComponentScan("guru.springframework.sdjpa_jdbc.dao")
+@ComponentScan("guru.springframework.sdjpa_jdbc.dao.hibernate")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class AuthorDaoTest {
 	@Autowired
