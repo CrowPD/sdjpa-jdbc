@@ -2,10 +2,7 @@ package guru.springframework.sdjpa_jdbc.dao.hibernate;
 
 import guru.springframework.sdjpa_jdbc.dao.BookDao;
 import guru.springframework.sdjpa_jdbc.domain.Book;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.*;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,10 +15,9 @@ public class HibernateBookDaoImpl implements BookDao {
 
 	@Override
 	public Book getById(Long id) {
-		EntityManager em = getEntityManager();
-		Book book = em.find(Book.class, id);
-		em.close();
-		return book;
+		try (EntityManager em = getEntityManager()) {
+			return em.find(Book.class, id);
+		}
 	}
 
 	@Override
@@ -36,37 +32,46 @@ public class HibernateBookDaoImpl implements BookDao {
 
 	@Override
 	public Book save(Book book) {
-		EntityManager em = getEntityManager();
-		EntityTransaction transaction = em.getTransaction();
-		transaction.begin();
-		em.persist(book);
-		em.flush();
-		transaction.commit();
-		em.close();
+		try (EntityManager em = getEntityManager()) {
+			EntityTransaction transaction = em.getTransaction();
+			transaction.begin();
+			em.persist(book);
+			em.flush();
+			transaction.commit();
+		}
 		return getById(book.getId());
 	}
 
 	@Override
 	public Book update(Book book) {
-		EntityManager em = getEntityManager();
-		EntityTransaction transaction = em.getTransaction();
-		transaction.begin();
-		em.merge(book);
-		em.flush();
-		transaction.commit();
-		em.close();
+		try (EntityManager em = getEntityManager()) {
+			EntityTransaction transaction = em.getTransaction();
+			transaction.begin();
+			em.merge(book);
+			em.flush();
+			transaction.commit();
+		}
 		return getById(book.getId());
 	}
 
 	@Override
 	public void deleteById(Long id) {
-		EntityManager em = getEntityManager();
-		EntityTransaction transaction = em.getTransaction();
-		transaction.begin();
-		em.remove(em.find(Book.class, id));
-		em.flush();
-		transaction.commit();
-		em.close();
+		try (EntityManager em = getEntityManager()) {
+			EntityTransaction transaction = em.getTransaction();
+			transaction.begin();
+			em.remove(em.find(Book.class, id));
+			em.flush();
+			transaction.commit();
+		}
+	}
+
+	@Override
+	public Book findByIsbn(String isbn) {
+		try(EntityManager em = getEntityManager()) {
+			TypedQuery<Book> q = em.createQuery("SELECT b FROM Book b WHERE b.isbn = :isbn", Book.class);
+			q.setParameter("isbn", isbn);
+			return q.getSingleResult();
+		}
 	}
 
 	private EntityManager getEntityManager() {

@@ -20,10 +20,9 @@ public class HiberAuthorDaoImpl implements AuthorDao {
 
 	@Override
 	public Author getById(Long id) {
-		EntityManager em = getEntityManager();
-		Author author = em.find(Author.class, id);
-		em.close();
-		return author;
+		try (EntityManager em = getEntityManager()) {
+			return em.find(Author.class, id);
+		}
 	}
 
 	@Override
@@ -39,41 +38,39 @@ public class HiberAuthorDaoImpl implements AuthorDao {
 
 	@Override
 	public Author save(Author author) {
-		EntityManager em = getEntityManager();
-
-		em.getTransaction().begin();
-		em.persist(author);
-		em.flush();
-		em.getTransaction().commit();
-		em.close();
+		try (EntityManager em = getEntityManager()) {
+			em.getTransaction().begin();
+			em.persist(author);
+			em.flush();
+			em.getTransaction().commit();
+		}
 
 		return getById(author.getId());
 	}
 
 	@Override
 	public Author update(Author author) {
-		EntityManager em = getEntityManager();
-
-		em.getTransaction().begin();
-		em.merge(author);
-		em.flush();
-		em.getTransaction().commit();
-		em.close();
-
+		try (EntityManager em = getEntityManager()) {
+			em.getTransaction().begin();
+			em.merge(author);
+			em.flush();
+			em.getTransaction().commit();
+		}
 		return getById(author.getId());
 	}
 
 	@Override
 	public void deleteById(Long id) {
-		EntityManager em = getEntityManager();
-		em.getTransaction().begin();
-		em.remove(em.find(Author.class, id));
-		em.flush();
-		em.getTransaction().commit();
-		em.close();
+		try (EntityManager em = getEntityManager()) {
+			em.getTransaction().begin();
+			em.remove(em.find(Author.class, id));
+			em.flush();
+			em.getTransaction().commit();
+		}
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<Author> listAuthorsByLastName(String lastName) {
 		try (EntityManager em = getEntityManager()) {
 			Query q = em.createQuery("SELECT a FROM Author a WHERE a.lastName LIKE :lastName");

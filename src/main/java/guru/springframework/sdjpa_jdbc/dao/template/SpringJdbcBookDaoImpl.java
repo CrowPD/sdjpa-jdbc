@@ -62,6 +62,11 @@ public class SpringJdbcBookDaoImpl implements BookDao {
 		jdbcTemplate.update("DELETE FROM book WHERE id = ?", id);
 	}
 
+	@Override
+	public Book findByIsbn(String isbn) {
+		return jdbcTemplate.queryForObject("SELECT * FROM book WHERE isbn = ?", getRowMapper(), isbn);
+	}
+
 	private RowMapper<Book> getRowMapper() {
 		return new BookMapper();
 	}
