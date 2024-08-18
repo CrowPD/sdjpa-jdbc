@@ -7,6 +7,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -74,5 +76,13 @@ public class AuthorDaoTest {
 
 		authorDao.deleteById(saved.getId());
 		assertThat(authorDao.getById(saved.getId())).isNull();
+	}
+
+	@Test
+	void testFindByLastName() {
+		List<Author> list = authorDao.listAuthorsByLastName("Mar");
+
+		assertThat(list).isNotNull();
+		assertThat(list.size()).isEqualTo(1);
 	}
 }

@@ -4,8 +4,11 @@ import guru.springframework.sdjpa_jdbc.dao.AuthorDao;
 import guru.springframework.sdjpa_jdbc.domain.Author;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class HiberAuthorDaoImpl implements AuthorDao {
@@ -68,6 +71,15 @@ public class HiberAuthorDaoImpl implements AuthorDao {
 		em.flush();
 		em.getTransaction().commit();
 		em.close();
+	}
+
+	@Override
+	public List<Author> listAuthorsByLastName(String lastName) {
+		try (EntityManager em = getEntityManager()) {
+			Query q = em.createQuery("SELECT a FROM Author a WHERE a.lastName LIKE :lastName");
+			q.setParameter("lastName", String.format("%%%s%%", lastName));
+			return q.getResultList();
+		}
 	}
 
 	private EntityManager getEntityManager() {

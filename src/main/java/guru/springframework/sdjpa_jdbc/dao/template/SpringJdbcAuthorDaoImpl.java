@@ -1,13 +1,18 @@
 package guru.springframework.sdjpa_jdbc.dao.template;
 
 import guru.springframework.sdjpa_jdbc.dao.AuthorDao;
+import guru.springframework.sdjpa_jdbc.dao.template.mapper.AuthorMapper;
 import guru.springframework.sdjpa_jdbc.domain.Author;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class SpringJdbcAuthorDaoImpl implements AuthorDao {
+	private static final String SELECT_FULL_AUTHOR_INFO_BASE_QUERY = "SELECT a.*, b.id as book_id, title, isbn, publisher FROM author a LEFT JOIN book b ON b.author_id = a.id";
+
 	private final JdbcTemplate jdbcTemplate;
 
 	public SpringJdbcAuthorDaoImpl(JdbcTemplate jdbcTemplate) {
@@ -18,7 +23,7 @@ public class SpringJdbcAuthorDaoImpl implements AuthorDao {
 	public Author getById(Long id) {
 		try {
 			return jdbcTemplate.query(
-					"SELECT a.*, b.id as book_id, title, isbn, publisher FROM author a LEFT JOIN book b ON b.author_id = a.id WHERE a.id = ?",
+					SELECT_FULL_AUTHOR_INFO_BASE_QUERY + " WHERE a.id = ?",
 					new AuthorExtractor(),
 					id
 			);
@@ -30,7 +35,7 @@ public class SpringJdbcAuthorDaoImpl implements AuthorDao {
 	@Override
 	public Author findByName(String firstName, String lastName) {
 		return jdbcTemplate.query(
-				"SELECT a.*, b.id as book_id, title, isbn, publisher FROM author a LEFT JOIN book b ON b.author_id = a.id WHERE first_name = ? AND last_name = ?",
+				SELECT_FULL_AUTHOR_INFO_BASE_QUERY + " WHERE first_name = ? AND last_name = ?",
 				new AuthorExtractor(),
 				firstName,
 				lastName
@@ -55,4 +60,12 @@ public class SpringJdbcAuthorDaoImpl implements AuthorDao {
 		jdbcTemplate.update("DELETE FROM author WHERE id = ?", id);
 	}
 
+	@Override
+	public List<Author> listAuthorsByLastName(String lastName) {
+		return jdbcTemplate.query(
+				SELECT_FULL_AUTHOR_INFO_BASE_QUERY + " WHERE a.last_name LIKE CONCAT('%', ?, '%')",
+				new AuthorMapper(),
+				lastName
+		);
+	}
 }

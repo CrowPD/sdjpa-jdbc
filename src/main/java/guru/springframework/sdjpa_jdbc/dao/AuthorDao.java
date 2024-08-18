@@ -2,6 +2,8 @@ package guru.springframework.sdjpa_jdbc.dao;
 
 import guru.springframework.sdjpa_jdbc.domain.Author;
 
+import java.util.List;
+
 public interface AuthorDao {
 	Author getById(Long id);
 
@@ -12,4 +14,6 @@ public interface AuthorDao {
 	Author update(Author author);
 
 	void deleteById(Long id);
+
+	List<Author> listAuthorsByLastName(String lastName);
 }
