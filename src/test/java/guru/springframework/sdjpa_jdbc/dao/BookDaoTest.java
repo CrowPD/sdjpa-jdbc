@@ -7,6 +7,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -15,6 +17,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class BookDaoTest {
 	@Autowired
 	BookDao bookDao;
+
+	@Test
+	void testFindAll() {
+		List<Book> result = bookDao.findAll();
+
+		assertThat(result).isNotNull();
+		assertThat(result.size()).isGreaterThan(0);
+	}
 
 	@Test
 	void testGetById() {

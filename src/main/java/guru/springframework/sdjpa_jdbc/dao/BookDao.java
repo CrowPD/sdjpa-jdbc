@@ -3,6 +3,8 @@ package guru.springframework.sdjpa_jdbc.dao;
 import guru.springframework.sdjpa_jdbc.domain.Book;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public interface BookDao {
 	Book getById(Long id);
@@ -16,4 +18,6 @@ public interface BookDao {
 	void deleteById(Long id);
 
 	Book findByIsbn(String isbn);
+
+	List<Book> findAll();
 }

@@ -8,12 +8,19 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class SpringJdbcBookDaoImpl implements BookDao {
 	private final JdbcTemplate jdbcTemplate;
 
 	public SpringJdbcBookDaoImpl(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
+	}
+
+	@Override
+	public List<Book> findAll() {
+		return jdbcTemplate.query("SELECT * FROM book", new BookMapper());
 	}
 
 	@Override

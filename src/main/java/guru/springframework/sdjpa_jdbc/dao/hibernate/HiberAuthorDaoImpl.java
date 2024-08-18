@@ -27,13 +27,15 @@ public class HiberAuthorDaoImpl implements AuthorDao {
 
 	@Override
 	public Author findByName(String firstName, String lastName) {
-		TypedQuery<Author> q = getEntityManager().createQuery(
-				"SELECT a FROM Author a WHERE a.firstName = :firstName AND a.lastName = :lastName",
-				Author.class
-		);
-		q.setParameter("firstName", firstName);
-		q.setParameter("lastName", lastName);
-		return q.getSingleResult();
+		try(EntityManager em = getEntityManager()) {
+			TypedQuery<Author> q = em.createQuery(
+					"SELECT a FROM Author a WHERE a.firstName = :firstName AND a.lastName = :lastName",
+					Author.class
+			);
+			q.setParameter("firstName", firstName);
+			q.setParameter("lastName", lastName);
+			return q.getSingleResult();
+		}
 	}
 
 	@Override

@@ -5,12 +5,21 @@ import guru.springframework.sdjpa_jdbc.domain.Book;
 import jakarta.persistence.*;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class HibernateBookDaoImpl implements BookDao {
 	private final EntityManagerFactory emf;
 
 	public HibernateBookDaoImpl(EntityManagerFactory emf) {
 		this.emf = emf;
+	}
+
+	@Override
+	public List<Book> findAll() {
+		try(EntityManager em = getEntityManager()) {
+			return em.createNamedQuery("bookFindAll", Book.class).getResultList();
+		}
 	}
 
 	@Override
@@ -22,12 +31,14 @@ public class HibernateBookDaoImpl implements BookDao {
 
 	@Override
 	public Book findByTitle(String title) {
-		TypedQuery<Book> q = getEntityManager().createQuery(
-				"SELECT b FROM Book b WHERE b.title = :title",
-				Book.class
-		);
-		q.setParameter("title", title);
-		return q.getSingleResult();
+		try(EntityManager em = getEntityManager()) {
+			TypedQuery<Book> q = em.createQuery(
+					"SELECT b FROM Book b WHERE b.title = :title",
+					Book.class
+			);
+			q.setParameter("title", title);
+			return q.getSingleResult();
+		}
 	}
 
 	@Override
