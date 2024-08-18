@@ -45,6 +45,16 @@ public class AuthorDaoTest {
 	}
 
 	@Test
+	void testGetByNameCriteria() {
+		Author foundByName = authorDao.findByNameCriteria("Eric", "Evans");
+		assertThat(foundByName).isNotNull();
+		Author foundById = authorDao.getById(foundByName.getId());
+		assertThat(foundById).isNotNull();
+		assertThat(foundByName.getFirstName()).isEqualTo(foundById.getFirstName());
+		assertThat(foundByName.getLastName()).isEqualTo(foundById.getLastName());
+	}
+
+	@Test
 	void testSave() {
 		Author author = new Author();
 		author.setFirstName("Andy");

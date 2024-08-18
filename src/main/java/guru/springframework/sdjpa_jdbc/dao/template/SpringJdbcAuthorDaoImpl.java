@@ -48,6 +48,12 @@ public class SpringJdbcAuthorDaoImpl implements AuthorDao {
 	}
 
 	@Override
+	public Author findByNameCriteria(String firstName, String lastName) {
+		// a stub, we don't need criteria gere
+		return findByName(firstName, lastName);
+	}
+
+	@Override
 	public Author save(Author author) {
 		jdbcTemplate.update("INSERT INTO author (first_name, last_name) VALUES (?, ?)", author.getFirstName(), author.getLastName());
 		Long lastId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Long.class);

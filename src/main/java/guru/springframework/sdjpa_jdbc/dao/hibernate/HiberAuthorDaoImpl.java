@@ -6,6 +6,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -35,6 +36,29 @@ public class HiberAuthorDaoImpl implements AuthorDao {
 			q.setParameter("firstName", firstName);
 			q.setParameter("lastName", lastName);
 			return q.getSingleResult();
+		}
+	}
+
+	@Override
+	public Author findByNameCriteria(String firstName, String lastName) {
+		try (EntityManager em = getEntityManager()) {
+			CriteriaBuilder cb = em.getCriteriaBuilder();
+
+			CriteriaQuery<Author> cq = cb.createQuery(Author.class);
+			Root<Author> root = cq.from(Author.class);
+
+			ParameterExpression<String> firstNameParam = cb.parameter(String.class);
+			ParameterExpression<String> lastNameParam = cb.parameter(String.class);
+
+			Predicate firstNamePred = cb.equal(root.get("firstName"), firstNameParam);
+			Predicate lastNamePred = cb.equal(root.get("lastName"), lastNameParam);
+
+			cq.select(root).where(cb.and(firstNamePred, lastNamePred));
+
+			TypedQuery<Author> actualQuery = em.createQuery(cq);
+			actualQuery.setParameter(firstNameParam, firstName);
+			actualQuery.setParameter(lastNameParam, lastName);
+			return actualQuery.getSingleResult();
 		}
 	}
 
