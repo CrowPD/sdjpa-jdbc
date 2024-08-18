@@ -20,6 +20,11 @@ public class SpringJdbcAuthorDaoImpl implements AuthorDao {
 	}
 
 	@Override
+	public List<Author> findAll() {
+		return jdbcTemplate.query(SELECT_FULL_AUTHOR_INFO_BASE_QUERY, new AuthorMapper());
+	}
+
+	@Override
 	public Author getById(Long id) {
 		try {
 			return jdbcTemplate.query(

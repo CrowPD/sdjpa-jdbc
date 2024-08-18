@@ -19,6 +19,14 @@ public class AuthorDaoTest {
 	AuthorDao authorDao;
 
 	@Test
+	void testFindAll() {
+		List<Author> result = authorDao.findAll();
+
+		assertThat(result).isNotNull();
+		assertThat(result.size()).isGreaterThan(0);
+	}
+
+	@Test
 	void testGetById() {
 		Author author = authorDao.getById(1L);
 

@@ -79,6 +79,15 @@ public class HiberAuthorDaoImpl implements AuthorDao {
 		}
 	}
 
+	@Override
+	public List<Author> findAll() {
+		try (EntityManager em = getEntityManager()) {
+			TypedQuery<Author> q = em.createNamedQuery("authorFindAll", Author.class);
+
+			return q.getResultList();
+		}
+	}
+
 	private EntityManager getEntityManager() {
 		return emf.createEntityManager();
 	}

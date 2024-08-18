@@ -3,7 +3,7 @@ package guru.springframework.sdjpa_jdbc.domain;
 import jakarta.persistence.*;
 
 import java.util.List;
-
+@NamedQuery(name = "authorFindAll", query = "FROM Author")
 @Entity
 public class Author {
 	@Id
